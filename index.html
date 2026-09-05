@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#081426">
+  <title>IBRCV · Votación Pastoral</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-orb orb-one"></div>
+  <div class="bg-orb orb-two"></div>
+
+  
+  <!-- PANTALLA DE CARGA -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-card">
+      <img src="images/logo_IBRCV.png" alt="IBRCV" class="loading-logo">
+      <span class="kicker">Iglesia Bautista Reformada Cristo Viene</span>
+      <h1>Aplicación de Votación</h1>
+      <p>Preparando el sistema...</p>
+      <div class="loading-progress"><span id="loading-progress-bar"></span></div>
+      <div class="loading-percent" id="loading-percent">0%</div>
+    </div>
+  </div>
+
+  <!-- MODAL GENERAL -->
+  <div id="modal-overlay" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button id="modal-close" class="modal-close" aria-label="Cerrar">×</button>
+      <div id="modal-icon" class="modal-icon">?</div>
+      <span id="modal-kicker" class="kicker">Confirmación</span>
+      <h3 id="modal-title">¿Está seguro de su voto?</h3>
+      <p id="modal-text">Seleccione una opción.</p>
+      <div id="modal-actions" class="modal-actions"></div>
+    </div>
+  </div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="images/logo_IBRCV.png" alt="Logo IBRCV">
+        <div>
+          <span class="eyebrow">IBRCV</span>
+          <strong>Iglesia Bautista Reformada<br>Cristo Viene</strong>
+        </div>
+      </div>
+      <div class="status-pill"><span class="status-dot"></span> Votación pastoral</div>
+    </header>
+
+    <!-- VISTA 1: LOGIN / ROLES -->
+    <section id="view-login" class="view active">
+      <div class="hero-copy">
+        <span class="kicker">Proceso de discernimiento congregacional</span>
+        <h1>Votación para el<br><em>Pastorado</em></h1>
+        <p>Seleccione el rol con el que desea ingresar al sistema de votación.</p>
+      </div>
+
+      <div class="role-grid">
+        <button class="role-card" data-go="voter">
+          <span class="role-icon">✓</span>
+          <span class="role-title">Votante</span>
+          <span class="role-description">Emitir mi voto sobre la candidatura pastoral.</span>
+          <span class="role-arrow">Continuar&nbsp; →</span>
+        </button>
+
+        <button class="role-card admin-card" data-go="admin">
+          <span class="role-icon">▦</span>
+          <span class="role-title">Administrador</span>
+          <span class="role-description">Consultar resultados y generar el reporte.</span>
+          <span class="role-arrow">Continuar&nbsp; →</span>
+        </button>
+      </div>
+
+      <button class="demo-link" data-go="demo"><span>✦</span> DEMO · ¿Cómo funciona?</button>
+      <p class="footer-note">IBRCV · Confesión Bautista de Fe de 1689</p>
+    </section>
+
+    <!-- VISTA 2: VOTANTE -->
+    <section id="view-voter" class="view">
+      <button class="back-button" data-go="login">← Volver al inicio</button>
+      <div class="candidate-layout">
+        <div class="candidate-photo-wrap">
+          <div class="photo-ring"></div>
+          <div class="candidate-photo" id="candidatePhoto">
+            <img src="images/FotoCandidato.png" alt="Foto del candidato Naifer Lovera"
+                 onerror="this.style.display='none'; document.getElementById('candidateFallback').style.display='grid';">
+            <div id="candidateFallback" class="photo-fallback" style="display:none;">
+              <span>NL</span>
+              <small>Agrega<br>FotoCandidato.png</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="candidate-info">
+          <span class="kicker">Candidato al pastorado</span>
+          <h2>Naifer<br><em>Lovera</em></h2>
+          <div class="gold-line"></div>
+          <p class="candidate-message">En oración y con espíritu de unidad, exprese su posición respecto a la candidatura pastoral.</p>
+          <p class="question">¿Está de acuerdo con la candidatura de <strong>Naifer Lovera</strong>?</p>
+
+          <div class="vote-grid">
+            <button class="vote-btn agree" data-vote="agree">
+              <span class="vote-symbol">✓</span>
+              <span><strong>Estoy de acuerdo</strong><small>Confirmar mi voto</small></span>
+            </button>
+            <button class="vote-btn disagree" data-vote="disagree">
+              <span class="vote-symbol">×</span>
+              <span><strong>No estoy de acuerdo</strong><small>Confirmar mi voto</small></span>
+            </button>
+          </div>
+          <div id="vote-message" class="vote-message" aria-live="polite"></div>
+          <p class="privacy-note">La selección se confirma antes de registrarse. Esta versión de demostración almacena los resultados localmente en el navegador.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ACCESO ADMINISTRADOR -->
+    <section id="view-admin-login" class="view">
+      <button class="back-button" data-go="login">← Volver al inicio</button>
+      <div class="access-card">
+        <div class="access-icon">▣</div>
+        <span class="kicker">Área restringida</span>
+        <h2>Acceso de administrador</h2>
+        <p>Ingrese la clave de administración para consultar los resultados de la votación.</p>
+        <form id="admin-login-form" class="access-form">
+          <label for="admin-password">Clave de administrador</label>
+          <input id="admin-password" type="password" autocomplete="off" placeholder="Ingrese la clave" required>
+          <button type="submit" class="primary-button">Ingresar al panel <span>→</span></button>
+          <div id="admin-login-error" class="access-error" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- VISTA 3: ADMIN -->
+    <section id="view-admin" class="view">
+      <button class="back-button" data-go="login">← Volver al inicio</button>
+      <div class="section-heading">
+        <div>
+          <span class="kicker">Panel de resultados</span>
+          <h2>Administración</h2>
+          <p>Resumen de la votación para <strong>Naifer Lovera</strong>.</p>
+        </div>
+        <div class="admin-actions"><button id="resetVotes" class="ghost-danger">Restablecer votos</button><button id="resetApp" class="reset-button">⚙ Reiniciar aplicación</button></div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card total">
+          <span>Total de votos</span><strong id="totalVotes">0</strong>
+        </article>
+        <article class="stat-card yes">
+          <span>De acuerdo</span><strong id="agreeVotes">0</strong>
+        </article>
+        <article class="stat-card no">
+          <span>No de acuerdo</span><strong id="disagreeVotes">0</strong>
+        </article>
+        <article class="stat-card percent">
+          <span>Aprobación</span><strong id="approvalPercent">0%</strong>
+        </article>
+      </div>
+
+      <div class="admin-grid">
+        <article class="chart-card">
+          <div class="card-head">
+            <div>
+              <span class="kicker">Distribución</span>
+              <h3>Resultado de la votación</h3>
+            </div>
+            <span id="resultLabel" class="result-label">Sin votos</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="voteChart" width="760" height="380"></canvas>
+          </div>
+        </article>
+
+        <article class="report-card">
+          <div class="report-icon">PDF</div>
+          <span class="kicker">Documento oficial</span>
+          <h3>Generar reporte</h3>
+          <p>Descargue un PDF con los resultados, porcentajes y diagrama de barras.</p>
+          <button id="pdfButton" class="primary-button">Generar reporte PDF <span>↗</span></button>
+          <div class="report-meta">
+            <span>✓ Candidato: Naifer Lovera</span>
+            <span>✓ Iglesia: IBRCV</span>
+            <span>✓ Fecha: <span id="reportDate"></span></span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- VISTA 4: DEMO -->
+    <section id="view-demo" class="view">
+      <button class="back-button" data-go="login">← Volver al inicio</button>
+      <div class="demo-header">
+        <span class="kicker">Modo demostración</span>
+        <h2>Así funciona la votación</h2>
+        <p>Ejemplo con el candidato <strong>Sr. Kiwi</strong> 🥝</p>
+      </div>
+
+      <div class="demo-layout">
+        <div class="demo-card candidate-demo">
+          <div class="kiwi-photo">
+            <img src="images/FotoKiwi.png" alt="Foto de demostración del Sr. Kiwi"
+                 onerror="this.style.display='none'; document.getElementById('kiwiFallback').style.display='grid';">
+            <div id="kiwiFallback" class="kiwi-fallback" style="display:none;">🥝</div>
+          </div>
+          <span class="kicker">Candidato de ejemplo</span>
+          <h3>Sr. Kiwi</h3>
+          <p>Esta vista es una demostración completa: puede votar, confirmar/corregir y generar un PDF de prueba.</p>
+          <div class="demo-vote-area">
+            <p class="question">¿Está de acuerdo con la candidatura del <strong>Sr. Kiwi</strong>?</p>
+            <div class="vote-grid">
+              <button class="vote-btn agree" data-demo-vote="agree"><span class="vote-symbol">✓</span><span><strong>Estoy de acuerdo</strong><small>Confirmar mi voto</small></span></button>
+              <button class="vote-btn disagree" data-demo-vote="disagree"><span class="vote-symbol">×</span><span><strong>No estoy de acuerdo</strong><small>Confirmar mi voto</small></span></button>
+            </div>
+            <div id="demo-vote-message" class="vote-message" aria-live="polite"></div>
+            <button id="demo-pdf" class="primary-button demo-pdf-button">Generar PDF de prueba <span>↗</span></button>
+          </div>
+        </div>
+
+        <div class="demo-card steps-card">
+          <div class="step"><b>01</b><div><strong>Seleccione “Votante”</strong><span>Desde la pantalla inicial.</span></div></div>
+          <div class="step"><b>02</b><div><strong>Revise al candidato</strong><span>Verá su fotografía y la pregunta de votación.</span></div></div>
+          <div class="step"><b>03</b><div><strong>Elija una opción</strong><span>“Estoy de acuerdo” o “No estoy de acuerdo”.</span></div></div>
+          <div class="step"><b>04</b><div><strong>Consulte resultados</strong><span>El administrador puede visualizar el gráfico y generar el PDF.</span></div></div>
+          <div class="demo-tip">💡 <strong>Importante:</strong> esta versión guarda los votos localmente en el navegador para fines de demostración.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- jsPDF para generar el reporte PDF directamente desde el navegador -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
